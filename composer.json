@@ -1,0 +1,26 @@
+{
+    "name": "amalgam-blockchain/amalgam-php",
+    "description": "Amalgam API PHP library for Yii framework",
+    "type": "yii2-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Technology and Media Lab Inc.",
+            "email": "amalgam@tmlab.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/amalgam-blockchain/amalgam-php/issues?state=open",
+        "source": "https://github.com/amalgam-blockchain/amalgam-php"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "^2.0",
+        "textalk/websocket": "1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Amalgam\\": "src/"
+        }
+    }
+}
