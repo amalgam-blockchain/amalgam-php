@@ -148,6 +148,16 @@ class Types {
         return $object;
     }
     
+    public static function typeBeneficiary()
+    {
+        $object = new Types(self::TYPE_STRUCT);
+        $object->param = [
+            'account' => Types::typeString(),
+            'weight' => Types::typeUint16()
+        ];
+        return $object;
+    }
+    
     public static function typePrice()
     {
         $object = new Types(self::TYPE_STRUCT);
