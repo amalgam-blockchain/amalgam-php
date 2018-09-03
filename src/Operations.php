@@ -102,7 +102,7 @@ class Operations
             'percent_amalgam_dollars' => Types::typeUint16(),
             'allow_votes' => Types::typeBool(),
             'allow_curation_rewards' => Types::typeBool(),
-            'extensions' => Types::typeSet(Types::typeStaticVariant([Types::typeSet(Types::typeBeneficiary())]))
+            'extensions' => Types::typeSet(Types::typeCommentOptionsExtension())
         ]);
         $this->add(20, 'set_withdraw_vesting_route', [
             'from_account' => Types::typeString(),

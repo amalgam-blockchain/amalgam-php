@@ -219,9 +219,9 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'verify_account_authority', [$nameOrId, $signers]);
     }
     
-    public function getActiveVotes($permlink)
+    public function getActiveVotes($author, $permlink)
     {
-        return $this->execute('database_api', 'get_active_votes', [$permlink]);
+        return $this->execute('database_api', 'get_active_votes', [$author, $permlink]);
     }
     
     public function getAccountVotes($voter)
@@ -229,14 +229,14 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'get_account_votes', [$voter]);
     }
     
-    public function getContent($permlink)
+    public function getContent($author, $permlink)
     {
-        return $this->execute('database_api', 'get_content', [$permlink]);
+        return $this->execute('database_api', 'get_content', [$author, $permlink]);
     }
     
-    public function getContentReplies($permlink)
+    public function getContentReplies($author, $permlink)
     {
-        return $this->execute('database_api', 'get_content_replies', [$permlink]);
+        return $this->execute('database_api', 'get_content_replies', [$author, $permlink]);
     }
     
     public function getWitnesses($witnessIds)
@@ -402,12 +402,12 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function witnessUpdate($wif, $owner, $url, $block_signing_key, $props, $fee)
+    public function witnessUpdate($wif, $owner, $url, $blockSigningKey, $props, $fee)
     {
         return $this->broadcast($wif, 'witness_update', [
             'owner' => $owner,
             'url' => $url,
-            'block_signing_key' => $block_signing_key,
+            'block_signing_key' => $blockSigningKey,
             'props' => $props,
             'fee' => $fee,
         ]);
