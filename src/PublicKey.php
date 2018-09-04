@@ -30,6 +30,9 @@ class PublicKey {
         if ($new_checksum !== $checksum) {
             throw new \Exception('Invalid public key (checksum did not match)');
         }
+        if (strcmp($public_key, str_repeat(chr(0), 33)) == 0) {
+            return new PublicKey(null);
+        }
         return new PublicKey(Point::decodeFrom($public_key));
     }
 
@@ -53,6 +56,9 @@ class PublicKey {
     
     public function getEncoded($compressed = null)
     {
+        if ($this->Q == null) {
+            return str_repeat(chr(0), 33);
+        }
         if ($compressed == null) {
             $compressed = $this->Q->compressed;
         }
