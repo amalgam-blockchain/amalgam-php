@@ -3,8 +3,6 @@
 namespace Amalgam;
 
 use Yii;
-use WebSocket\Client;
-use WebSocket\ConnectionException;
 
 class Connection {
     
@@ -28,7 +26,12 @@ class Connection {
 
     private function newConnection($nodeUrl)
     {
-        self::$connection = new Client($nodeUrl, ['timeout' => self::TIMEOUT]);
+        $scheme = strtolower(parse_url($nodeUrl, PHP_URL_SCHEME));
+        if (in_array($scheme, array('ws', 'wss'))) {
+            self::$connection = new WsClient($nodeUrl, self::TIMEOUT);
+        } else {
+            self::$connection = new HttpClient($nodeUrl, self::TIMEOUT);
+        }
         return self::$connection;
     }
 
@@ -136,8 +139,7 @@ class Connection {
     {
         try {
             $connection = $this->getConnection();
-            $connection->send($data);
-            $result = json_decode($connection->receive(), true);
+            $result = json_decode($connection->send($data), true);
             if (is_array($result) && array_key_exists('error', $result)) {
                 $error = $result['error'];
                 if (is_array($error) && array_key_exists('message', $error)) {
@@ -147,7 +149,7 @@ class Connection {
                     ]));
                 }
             }
-        } catch (ConnectionException $e) {
+        } catch (ClientException $e) {
             if ($try_number < self::MAX_NUMBER_OF_TRIES) {
                 $result = $this->executeInternal($data, $try_number + 1);
             } elseif ($this->existsReserveNodeUrl()) {

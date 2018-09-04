@@ -17,3 +17,5 @@ Add following lines to your main configuration file and specify correct node IP 
     'node' => 'ws://127.0.0.1:8090',
 ],
 ```
+
+Both WebSocket (ws/wss) and JSON-RPC (http/https) protocols are supported to connect to nodes.
