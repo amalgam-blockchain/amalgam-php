@@ -184,11 +184,6 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'get_open_orders', [$owner]);
     }
     
-    public function getLiquidityQueue($startAccount, $limit)
-    {
-        return $this->execute('database_api', 'get_liquidity_queue', [$startAccount, $limit]);
-    }
-    
     public function getTransactionHex($trx)
     {
         return $this->execute('database_api', 'get_transaction_hex', [$trx]);
@@ -217,26 +212,6 @@ class Amalgam extends Component {
     public function verifyAccountAuthority($nameOrId, $signers)
     {
         return $this->execute('database_api', 'verify_account_authority', [$nameOrId, $signers]);
-    }
-    
-    public function getActiveVotes($author, $permlink)
-    {
-        return $this->execute('database_api', 'get_active_votes', [$author, $permlink]);
-    }
-    
-    public function getAccountVotes($voter)
-    {
-        return $this->execute('database_api', 'get_account_votes', [$voter]);
-    }
-    
-    public function getContent($author, $permlink)
-    {
-        return $this->execute('database_api', 'get_content', [$author, $permlink]);
-    }
-    
-    public function getContentReplies($author, $permlink)
-    {
-        return $this->execute('database_api', 'get_content_replies', [$author, $permlink]);
     }
     
     public function getWitnesses($witnessIds)
@@ -269,43 +244,12 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'get_active_witnesses');
     }
     
-    public function getMinerQueue()
-    {
-        return $this->execute('database_api', 'get_miner_queue');
-    }
-    
-    public function getRewardFund($name)
-    {
-        return $this->execute('database_api', 'get_reward_fund', [$name]);
-    }
-    
     public function getVestingDelegations($account, $from, $limit)
     {
         return $this->execute('database_api', 'get_vesting_delegations', [$account, $from, $limit]);
     }
     
     // Network Broadcast API
-    
-    public function vote($wif, $voter, $author, $permlink, $weight)
-    {
-        return $this->broadcast($wif, 'vote', [
-            'voter' => $voter,
-            'author' => $author,
-            'permlink' => $permlink,
-            'weight' => $weight,
-        ]);
-    }
-    
-    public function comment($wif, $parentAuthor, $parentPermlink, $author, $permlink, $jsonMetadata)
-    {
-        return $this->broadcast($wif, 'comment', [
-            'parent_author' => $parentAuthor,
-            'parent_permlink' => $parentPermlink,
-            'author' => $author,
-            'permlink' => $permlink,
-            'json_metadata' => $jsonMetadata,
-        ]);
-    }
     
     public function transfer($wif, $from, $to, $amount, $memo)
     {
@@ -430,28 +374,6 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function deleteComment($wif, $author, $permlink)
-    {
-        return $this->broadcast($wif, 'delete_comment', [
-            'author' => $author,
-            'permlink' => $permlink,
-        ]);
-    }
-    
-    public function commentOptions($wif, $author, $permlink, $maxAcceptedPayout, $percentAmalgamDollars,
-            $allowVotes, $allowCurationRewards, $extensions)
-    {
-        return $this->broadcast($wif, 'comment_options', [
-            'author' => $author,
-            'permlink' => $permlink,
-            'max_accepted_payout' => $maxAcceptedPayout,
-            'percent_amalgam_dollars' => $percentAmalgamDollars,
-            'allow_votes' => $allowVotes,
-            'allow_curation_rewards' => $allowCurationRewards,
-            'extensions' => $extensions,
-        ]);
-    }
-    
     public function setWithdrawVestingRoute($wif, $fromAccount, $toAccount, $percent, $autoVest)
     {
         return $this->broadcast($wif, 'set_withdraw_vesting_route', [
@@ -474,23 +396,6 @@ class Amalgam extends Component {
             ],
             'fill_or_kill' => $fillOrKill,
             'expiration' => $expiration,
-        ]);
-    }
-    
-    public function challengeAuthority($wif, $challenger, $challenged, $requireOwner)
-    {
-        return $this->broadcast($wif, 'challenge_authority', [
-            'challenger' => $challenger,
-            'challenged' => $challenged,
-            'require_owner' => $requireOwner,
-        ]);
-    }
-    
-    public function proveAuthority($wif, $challenged, $requireOwner)
-    {
-        return $this->broadcast($wif, 'prove_authority', [
-            'challenged' => $challenged,
-            'require_owner' => $requireOwner,
         ]);
     }
     
@@ -614,57 +519,12 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function resetAccount($wif, $resetAccount, $accountToReset, $newOwnerAuthority)
-    {
-        return $this->broadcast($wif, 'reset_account', [
-            'reset_account' => $resetAccount,
-            'account_to_reset' => $accountToReset,
-            'new_owner_authority' => $newOwnerAuthority,
-        ]);
-    }
-    
-    public function setResetAccount($wif, $account, $currentResetAccount, $resetAccount)
-    {
-        return $this->broadcast($wif, 'set_reset_account', [
-            'account' => $account,
-            'current_reset_account' => $currentResetAccount,
-            'reset_account' => $resetAccount,
-        ]);
-    }
-    
-    public function claimRewardBalance($wif, $account, $rewardAmalgam, $rewardABD, $rewardVests)
-    {
-        return $this->broadcast($wif, 'claim_reward_balance', [
-            'account' => $account,
-            'reward_amalgam' => $rewardAmalgam,
-            'reward_abd' => $rewardABD,
-            'reward_vests' => $rewardVests,
-        ]);
-    }
-    
     public function delegateVestingShares($wif, $delegator, $delegatee, $vestingShares)
     {
         return $this->broadcast($wif, 'delegate_vesting_shares', [
             'delegator' => $delegator,
             'delegatee' => $delegatee,
             'vesting_shares' => $vestingShares,
-        ]);
-    }
-    
-    public function accountCreateWithDelegation($wif, $fee, $delegation, $creator, $newAccountName,
-            $owner, $active, $posting, $memoKey, $jsonMetadata, $extensions)
-    {
-        return $this->broadcast($wif, 'account_create_with_delegation', [
-            'fee' => $fee,
-            'delegation' => $delegation,
-            'creator' => $creator,
-            'new_account_name' => $newAccountName,
-            'owner' => $owner,
-            'active' => $active,
-            'posting' => $posting,
-            'memo_key' => $memoKey,
-            'json_metadata' => $jsonMetadata,
-            'extensions' => $extensions,
         ]);
     }
     
@@ -745,37 +605,6 @@ class Amalgam extends Component {
         $fee->amount = $fee->amount * 30;
         return $this->accountCreate($registrarWif, $fee->toString(), $registrarName,
                 $name, $owner, $active, $posting, $publicKeys['memo'], '');
-    }
-    
-    public function createAccountWithDelegation($registrarWif, $registrarName, $registrarDelegation, $name, $publicKeys)
-    {
-        $owner = [
-            'weight_threshold' => 1,
-            'account_auths' => [],
-            'key_auths' => [[$publicKeys['owner'], 1]],
-        ];
-        $active = [
-            'weight_threshold' => 1,
-            'account_auths' => [],
-            'key_auths' => [[$publicKeys['active'], 1]],
-        ];
-        $posting = [
-            'weight_threshold' => 1,
-            'account_auths' => [],
-            'key_auths' => [[$publicKeys['posting'], 1]],
-        ];
-        $properties = $this->getChainProperties();
-        if (Utils::endsWith($registrarDelegation, AssetSymbol::AMLV)) {
-            $delegation = Asset::fromString($registrarDelegation);
-        } else if (Utils::endsWith($registrarDelegation, AssetSymbol::AML)) {
-            $price = Utils::getVestingSharePrice($this->getDynamicGlobalProperties());
-            $delegation = Asset::fromString($registrarDelegation)->multiply($price);
-        } else {
-            $delegation = new Asset(0, AssetSymbol::AMLV);
-        }
-        $fee = Asset::fromString($properties['account_creation_fee']);
-        return $this->accountCreateWithDelegation($registrarWif, $fee->toString(),
-                $delegation->toString(), $registrarName, $name, $owner, $active, $posting, $publicKeys['memo'], '', []);
     }
     
     public function updateAccount($wif, $name, $publicKeys)
