@@ -125,12 +125,8 @@ class Connection {
         }
         return $this->executeInternal(json_encode([
             'jsonrpc' => '2.0',
-            'method' => 'call',
-            'params' => [
-                $apiName,
-                $command,
-                $params
-            ],
+            'method' => $apiName . '.' . $command,
+            'params' => empty($params) ? (object)[] : $params,
             'id' => $id,
         ]));
     }

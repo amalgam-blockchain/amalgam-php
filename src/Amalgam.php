@@ -44,29 +44,48 @@ class Amalgam extends Component {
         $transaction = new Transaction($connection);
         $transaction->addOperation($command, $params);
         $transaction->sign([$wif]);
-        return $connection->exec('network_broadcast_api', 'broadcast_transaction_synchronous', [$transaction->getTx()]);
+        return $this->broadcastTransactionSynchronous($transaction->getTx());
     }
     
     // Database API
 
     public function getBlockHeader($blockNum)
     {
-        return $this->execute('database_api', 'get_block_header', [$blockNum]);
+        return $this->execute('database_api', 'get_block_header', [
+            'block_num' => $blockNum,
+        ]);
     }
     
     public function getBlock($blockNum)
     {
-        return $this->execute('database_api', 'get_block', [$blockNum]);
+        return $this->execute('database_api', 'get_block', [
+            'block_num' => $blockNum,
+        ]);
     }
     
     public function getOpsInBlock($blockNum, $onlyVirtual)
     {
-        return $this->execute('database_api', 'get_ops_in_block', [$blockNum, $onlyVirtual]);
+        return $this->execute('database_api', 'get_ops_in_block', [
+            'block_num' => $blockNum,
+            'only_virtual' => $onlyVirtual,
+        ]);
+    }
+    
+    public function getTransaction($id)
+    {
+        return $this->execute('database_api', 'get_transaction', [
+            'id' => $id,
+        ]);
     }
     
     public function getConfig()
     {
         return $this->execute('database_api', 'get_config');
+    }
+    
+    public function getVersion()
+    {
+        return $this->execute('database_api', 'get_version');
     }
     
     public function getDynamicGlobalProperties()
@@ -79,164 +98,45 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'get_chain_properties');
     }
     
-    public function getFeedHistory()
-    {
-        return $this->execute('database_api', 'get_feed_history');
-    }
-
-    public function getCurrentMedianHistoryPrice()
-    {
-        return $this->execute('database_api', 'get_current_median_history_price');
-    }
-    
     public function getWitnessSchedule()
     {
         return $this->execute('database_api', 'get_witness_schedule');
     }
 
-    public function getHardforkVersion()
+    public function getReserveRatio()
     {
-        return $this->execute('database_api', 'get_hardfork_version');
+        return $this->execute('database_api', 'get_reserve_ratio');
     }
 
-    public function getNextScheduledHardfork()
+    public function getHardforkProperties()
     {
-        return $this->execute('database_api', 'get_next_scheduled_hardfork');
+        return $this->execute('database_api', 'get_hardfork_properties');
     }
 
-    public function getKeyReferences($key)
+    public function getCurrentPriceFeed()
     {
-        return $this->execute('account_by_key_api', 'get_key_references', [$key]);
+        return $this->execute('database_api', 'get_current_price_feed');
+    }
+    
+    public function getFeedHistory()
+    {
+        return $this->execute('database_api', 'get_feed_history');
     }
 
-    public function getAccounts($names)
+    public function listWitnesses($start, $limit, $order)
     {
-        return $this->execute('database_api', 'get_accounts', [$names]);
+        return $this->execute('database_api', 'list_witnesses', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
     }
     
-    public function lookupAccountNames($accountNames)
+    public function findWitnesses($owners)
     {
-        return $this->execute('database_api', 'lookup_account_names', [$accountNames]);
-    }
-    
-    public function lookupAccounts($lowerBoundName, $limit)
-    {
-        return $this->execute('database_api', 'lookup_accounts', [$lowerBoundName, $limit]);
-    }
-    
-    public function getAccountCount()
-    {
-        return $this->execute('database_api', 'get_account_count');
-    }
-    
-    public function getConversionRequests($accountName)
-    {
-        return $this->execute('database_api', 'get_conversion_requests', [$accountName]);
-    }
-    
-    public function getAccountHistory($name, $from, $limit)
-    {
-        return $this->execute('database_api', 'get_account_history', [$name, $from, $limit]);
-    }
-    
-    public function getOwnerHistory($account)
-    {
-        return $this->execute('database_api', 'get_owner_history', [$account]);
-    }
-    
-    public function getRecoveryRequest($account)
-    {
-        return $this->execute('database_api', 'get_recovery_request', [$account]);
-    }
-
-    public function getEscrow($from, $escrowId)
-    {
-        return $this->execute('database_api', 'get_escrow', [$from, $escrowId]);
-    }
-    
-    public function getWithdrawRoutes($account, $withdrawRouteType)
-    {
-        return $this->execute('database_api', 'get_withdraw_routes', [$account, $withdrawRouteType]);
-    }
-    
-    public function getAccountBandwidth($account, $bandwidthType)
-    {
-        return $this->execute('database_api', 'get_account_bandwidth', [$account, $bandwidthType]);
-    }
-    
-    public function getSavingsWithdrawFrom($account)
-    {
-        return $this->execute('database_api', 'get_savings_withdraw_from', [$account]);
-    }
-    
-    public function getSavingsWithdrawTo($account)
-    {
-        return $this->execute('database_api', 'get_savings_withdraw_to', [$account]);
-    }
-    
-    public function getOrderBook($limit)
-    {
-        return $this->execute('database_api', 'get_order_book', [$limit]);
-    }
-    
-    public function getOpenOrders($owner)
-    {
-        return $this->execute('database_api', 'get_open_orders', [$owner]);
-    }
-    
-    public function getTransactionHex($trx)
-    {
-        return $this->execute('database_api', 'get_transaction_hex', [$trx]);
-    }
-    
-    public function getTransaction($trxId)
-    {
-        return $this->execute('database_api', 'get_transaction', [$trxId]);
-    }
-    
-    public function getRequiredSignatures($trx, $availableKeys)
-    {
-        return $this->execute('database_api', 'get_required_signatures', [$trx, $availableKeys]);
-    }
-    
-    public function getPotentialSignatures($trx)
-    {
-        return $this->execute('database_api', 'get_potential_signatures', [$trx]);
-    }
-    
-    public function verifyAuthority($trx)
-    {
-        return $this->execute('database_api', 'verify_authority', [$trx]);
-    }
-    
-    public function verifyAccountAuthority($nameOrId, $signers)
-    {
-        return $this->execute('database_api', 'verify_account_authority', [$nameOrId, $signers]);
-    }
-    
-    public function getWitnesses($witnessIds)
-    {
-        return $this->execute('database_api', 'get_witnesses', [$witnessIds]);
-    }
-    
-    public function getWitnessByAccount($accountName)
-    {
-        return $this->execute('database_api', 'get_witness_by_account', [$accountName]);
-    }
-    
-    public function getWitnessesByVote($from, $limit)
-    {
-        return $this->execute('database_api', 'get_witnesses_by_vote', [$from, $limit]);
-    }
-    
-    public function lookupWitnessAccounts($lowerBoundName, $limit)
-    {
-        return $this->execute('database_api', 'lookup_witness_accounts', [$lowerBoundName, $limit]);
-    }
-    
-    public function getWitnessCount()
-    {
-        return $this->execute('database_api', 'get_witness_count');
+        return $this->execute('database_api', 'find_witnesses', [
+            'owners' => $owners,
+        ]);
     }
     
     public function getActiveWitnesses()
@@ -244,12 +144,296 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'get_active_witnesses');
     }
     
-    public function getVestingDelegations($account, $from, $limit)
+    public function listAccounts($start, $limit, $order)
     {
-        return $this->execute('database_api', 'get_vesting_delegations', [$account, $from, $limit]);
+        return $this->execute('database_api', 'list_accounts', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
     }
     
+    public function findAccounts($accounts)
+    {
+        return $this->execute('database_api', 'find_accounts', [
+            'accounts' => $accounts,
+        ]);
+    }
+    
+    public function getAccountHistory($account, $start, $limit)
+    {
+        return $this->execute('database_api', 'get_account_history', [
+            'account' => $account,
+            'start' => $start,
+            'limit' => $limit,
+        ]);
+    }
+    
+    public function getAccountBandwidth($account, $type)
+    {
+        return $this->execute('database_api', 'get_account_bandwidth', [
+            'account' => $account,
+            'type' => $type,
+        ]);
+    }
+    
+    public function listOwnerHistories($start, $limit)
+    {
+        return $this->execute('database_api', 'list_owner_histories', [
+            'start' => $start,
+            'limit' => $limit,
+        ]);
+    }
+    
+    public function findOwnerHistories($ownerAuths)
+    {
+        return $this->execute('database_api', 'find_owner_histories', [
+            'owner_auths' => $ownerAuths,
+        ]);
+    }
+
+    public function listAccountRecoveryRequests($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_account_recovery_requests', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findAccountRecoveryRequests($accounts)
+    {
+        return $this->execute('database_api', 'find_account_recovery_requests', [
+            'accounts' => $accounts,
+        ]);
+    }
+    
+    public function listChangeRecoveryAccountRequests($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_change_recovery_account_requests', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findChangeRecoveryAccountRequests($requests)
+    {
+        return $this->execute('database_api', 'find_change_recovery_account_requests', [
+            'requests' => $requests,
+        ]);
+    }
+    
+    public function listEscrows($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_escrows', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findEscrows($escrows)
+    {
+        return $this->execute('database_api', 'find_escrows', [
+            'escrows' => $escrows,
+        ]);
+    }
+    
+    public function listWithdrawVestingRoutes($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_withdraw_vesting_routes', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findWithdrawVestingRoutes($routes)
+    {
+        return $this->execute('database_api', 'find_withdraw_vesting_routes', [
+            'routes' => $routes,
+        ]);
+    }
+    
+    public function listSavingsWithdrawals($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_savings_withdrawals', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findSavingsWithdrawals($withdrawals)
+    {
+        return $this->execute('database_api', 'find_savings_withdrawals', [
+            'withdrawals' => $withdrawals,
+        ]);
+    }
+    
+    public function listVestingDelegations($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_vesting_delegations', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findVestingDelegations($delegations)
+    {
+        return $this->execute('database_api', 'find_vesting_delegations', [
+            'delegations' => $delegations,
+        ]);
+    }
+    
+    public function listVestingDelegationExpirations($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_vesting_delegation_expirations', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findVestingDelegationExpirations($delegations)
+    {
+        return $this->execute('database_api', 'find_vesting_delegation_expirations', [
+            'delegations' => $delegations,
+        ]);
+    }
+    
+    public function listAbdConversionRequests($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_abd_conversion_requests', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findAbdConversionRequests($requests)
+    {
+        return $this->execute('database_api', 'find_abd_conversion_requests', [
+            'requests' => $requests,
+        ]);
+    }
+    
+    public function listDeclineVotingRightsRequests($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_decline_voting_rights_requests', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findDeclineVotingRightsRequests($requests)
+    {
+        return $this->execute('database_api', 'find_decline_voting_rights_requests', [
+            'requests' => $requests,
+        ]);
+    }
+    
+    public function listLimitOrders($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_limit_orders', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
+    public function findLimitOrders($orders)
+    {
+        return $this->execute('database_api', 'find_limit_orders', [
+            'orders' => $orders,
+        ]);
+    }
+    
+    public function getTransactionHex($trx)
+    {
+        return $this->execute('database_api', 'get_transaction_hex', [
+            'trx' => $trx,
+        ]);
+    }
+    
+    public function getRequiredSignatures($trx, $availableKeys)
+    {
+        return $this->execute('database_api', 'get_required_signatures', [
+            'trx' => $trx,
+            'available_keys' => $availableKeys,
+        ]);
+    }
+    
+    public function getPotentialSignatures($trx)
+    {
+        return $this->execute('database_api', 'get_potential_signatures', [
+            'trx' => $trx,
+        ]);
+    }
+    
+    public function verifyAuthority($trx)
+    {
+        return $this->execute('database_api', 'verify_authority', [
+            'trx' => $trx,
+        ]);
+    }
+    
+    public function verifyAccountAuthority($account, $signers)
+    {
+        return $this->execute('database_api', 'verify_account_authority', [
+            'account' => $account,
+            'signers' => $signers,
+        ]);
+    }
+    
+    public function verifySignatures($hash, $signatures, $requiredOwner, $requiredActive, $requiredPosting, $requiredOther)
+    {
+        return $this->execute('database_api', 'verify_signatures', [
+            'hash' => $hash,
+            'signatures' => $signatures,
+            'required_owner' => $requiredOwner,
+            'required_active' => $requiredActive,
+            'required_posting' => $requiredPosting,
+            'required_other' => $requiredOther,
+        ]);
+    }
+    
+    // Account By Key API
+    
+    public function getKeyReferences($keys)
+    {
+        return $this->execute('account_by_key_api', 'get_key_references', [
+            'keys' => $keys,
+        ]);
+    }
+
     // Network Broadcast API
+    
+    public function broadcastTransaction($trx)
+    {
+        return $this->execute('network_broadcast_api', 'broadcast_transaction', [
+            'trx' => $trx,
+        ]);
+    }
+
+    public function broadcastTransactionSynchronous($trx)
+    {
+        return $this->execute('network_broadcast_api', 'broadcast_transaction_synchronous', [
+            'trx' => $trx,
+        ]);
+    }
+
+    public function broadcastBlock($block)
+    {
+        return $this->execute('network_broadcast_api', 'broadcast_block', [
+            'block' => $block,
+        ]);
+    }
+
+    // Operations
     
     public function transfer($wif, $from, $to, $amount, $memo)
     {
@@ -354,6 +538,15 @@ class Amalgam extends Component {
             'block_signing_key' => $blockSigningKey,
             'props' => $props,
             'fee' => $fee,
+        ]);
+    }
+    
+    public function witnessSetProperties($wif, $owner, $props, $extensions)
+    {
+        return $this->broadcast($wif, 'witness_set_properties', [
+            'owner' => $owner,
+            'props' => $props,
+            'extensions' => $extensions,
         ]);
     }
     
@@ -532,8 +725,8 @@ class Amalgam extends Component {
     
     public function getAccount($name)
     {
-        $result = $this->getAccounts([$name]);
-        return ($result != null) && is_array($result) && !empty($result) ? $result[0] : null;
+        $result = $this->findAccounts([$name]);
+        return ($result != null) && !empty($result['accounts']) ? $result['accounts'][0] : null;
     }
     
     public function validateAccountName($value)
