@@ -138,6 +138,15 @@ class Amalgam extends Component {
         ]);
     }
     
+    public function listWitnessVotes($start, $limit, $order)
+    {
+        return $this->execute('database_api', 'list_witness_votes', [
+            'start' => $start,
+            'limit' => $limit,
+            'order' => $order,
+        ]);
+    }
+    
     public function getActiveWitnesses()
     {
         return $this->execute('database_api', 'get_active_witnesses');
