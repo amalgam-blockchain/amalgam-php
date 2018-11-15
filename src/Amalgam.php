@@ -193,10 +193,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findOwnerHistories($ownerAuths)
+    public function findOwnerHistories($owner)
     {
         return $this->execute('database_api', 'find_owner_histories', [
-            'owner_auths' => $ownerAuths,
+            'owner' => $owner,
         ]);
     }
 
@@ -225,10 +225,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findChangeRecoveryAccountRequests($requests)
+    public function findChangeRecoveryAccountRequests($accounts)
     {
         return $this->execute('database_api', 'find_change_recovery_account_requests', [
-            'requests' => $requests,
+            'accounts' => $accounts,
         ]);
     }
     
@@ -241,10 +241,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findEscrows($escrows)
+    public function findEscrows($from)
     {
         return $this->execute('database_api', 'find_escrows', [
-            'escrows' => $escrows,
+            'from' => $from,
         ]);
     }
     
@@ -257,10 +257,11 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findWithdrawVestingRoutes($routes)
+    public function findWithdrawVestingRoutes($account, $order)
     {
         return $this->execute('database_api', 'find_withdraw_vesting_routes', [
-            'routes' => $routes,
+            'account' => $account,
+            'order' => $order,
         ]);
     }
     
@@ -273,10 +274,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findSavingsWithdrawals($withdrawals)
+    public function findSavingsWithdrawals($account)
     {
         return $this->execute('database_api', 'find_savings_withdrawals', [
-            'withdrawals' => $withdrawals,
+            'account' => $account,
         ]);
     }
     
@@ -289,10 +290,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findVestingDelegations($delegations)
+    public function findVestingDelegations($account)
     {
         return $this->execute('database_api', 'find_vesting_delegations', [
-            'delegations' => $delegations,
+            'account' => $account,
         ]);
     }
     
@@ -305,10 +306,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findVestingDelegationExpirations($delegations)
+    public function findVestingDelegationExpirations($account)
     {
         return $this->execute('database_api', 'find_vesting_delegation_expirations', [
-            'delegations' => $delegations,
+            'account' => $account,
         ]);
     }
     
@@ -321,10 +322,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findAbdConversionRequests($requests)
+    public function findAbdConversionRequests($account)
     {
         return $this->execute('database_api', 'find_abd_conversion_requests', [
-            'requests' => $requests,
+            'account' => $account,
         ]);
     }
     
@@ -337,10 +338,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findDeclineVotingRightsRequests($requests)
+    public function findDeclineVotingRightsRequests($accounts)
     {
         return $this->execute('database_api', 'find_decline_voting_rights_requests', [
-            'requests' => $requests,
+            'accounts' => $accounts,
         ]);
     }
     
@@ -353,10 +354,10 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findLimitOrders($orders)
+    public function findLimitOrders($account)
     {
         return $this->execute('database_api', 'find_limit_orders', [
-            'orders' => $orders,
+            'account' => $account,
         ]);
     }
     
@@ -549,15 +550,6 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function witnessSetProperties($wif, $owner, $props, $extensions)
-    {
-        return $this->broadcast($wif, 'witness_set_properties', [
-            'owner' => $owner,
-            'props' => $props,
-            'extensions' => $extensions,
-        ]);
-    }
-    
     public function accountWitnessVote($wif, $account, $witness, $approve)
     {
         return $this->broadcast($wif, 'account_witness_vote', [
@@ -726,6 +718,15 @@ class Amalgam extends Component {
             'delegator' => $delegator,
             'delegatee' => $delegatee,
             'vesting_shares' => $vestingShares,
+        ]);
+    }
+    
+    public function witnessSetProperties($wif, $owner, $props, $extensions)
+    {
+        return $this->broadcast($wif, 'witness_set_properties', [
+            'owner' => $owner,
+            'props' => $props,
+            'extensions' => $extensions,
         ]);
     }
     
