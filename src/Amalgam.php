@@ -21,11 +21,8 @@ class Amalgam extends Component {
         $connection = new Connection();
         $connection->nodeUrl = $this->node;
         $array = json_decode($json, true);
-        if (is_array($array) && array_key_exists('params', $array)) {
-            $params = $array['params'];
-            if (is_array($params) && (count($params) > 0)) {
-                return $connection->execute($params[0], $params[1], $params[2], array_key_exists('id', $array) ? $array['id'] : null);
-            }
+        if (is_array($array) && array_key_exists('method', $array) && array_key_exists('params', $array)) {
+            return $connection->execute(null, $array['method'], $array['params'], array_key_exists('id', $array) ? $array['id'] : null);
         }
         return null;
     }
@@ -44,7 +41,7 @@ class Amalgam extends Component {
         $transaction = new Transaction($connection);
         $transaction->addOperation($command, $params);
         $transaction->sign([$wif]);
-        return $this->broadcastTransactionSynchronous($transaction->getTx());
+        return $connection->exec('network_broadcast_api', 'broadcast_transaction_synchronous', [$transaction->getTx()]);
     }
     
     // Database API
