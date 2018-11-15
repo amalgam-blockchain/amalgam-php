@@ -41,7 +41,9 @@ class Amalgam extends Component {
         $transaction = new Transaction($connection);
         $transaction->addOperation($command, $params);
         $transaction->sign([$wif]);
-        return $connection->exec('network_broadcast_api', 'broadcast_transaction_synchronous', [$transaction->getTx()]);
+        return $connection->exec('network_broadcast_api', 'broadcast_transaction_synchronous', [
+            'trx' => $transaction->getTx(),
+        ]);
     }
     
     // Database API
