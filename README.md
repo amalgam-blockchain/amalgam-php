@@ -14,7 +14,7 @@ Add following lines to your main configuration file and specify correct node IP 
 ```php
 'amalgam' => [
     'class' => 'Amalgam\Amalgam',
-    'node' => 'ws://127.0.0.1:8090',
+    'node' => 'http://127.0.0.1:8090',
 ],
 ```
 

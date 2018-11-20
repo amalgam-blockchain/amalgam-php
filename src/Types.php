@@ -247,9 +247,9 @@ class Types {
                 $this->param->serialize($buffer, $value[$i]);
             }
         } else if ($this->type == self::TYPE_STATIC_VARIANT) {
-            $operation = $this->getOperation($value[0]);
+            $operation = $this->getOperation($value['type']);
             $buffer->writeVarint32($operation->paramEx);
-            $operation->serialize($buffer, $value[1]);
+            $operation->serialize($buffer, $value['value']);
         } else if ($this->type == self::TYPE_MAP) {
             $length = count($value);
             $buffer->writeVarint32($length);

@@ -6,6 +6,8 @@ class Operations
 {
     public $operations = [];
     
+    const SUFFIX = '_operation';
+    
     public function __construct()
     {
         $this->add(0, 'transfer', [
@@ -172,40 +174,45 @@ class Operations
             'delegatee' => Types::typeString(),
             'vesting_shares' => Types::typeAsset()
         ]);
-        $this->add(29, 'tbd1', [
+        $this->add(29, 'witness_set_properties', [
+            'owner' => Types::typeString(),
+            'props' => Types::typeSet(Types::typeString()),
+            'extensions' => Types::typeSet(Types::typeFutureExtensions())
+        ]);
+        $this->add(30, 'tbd1', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(30, 'tbd2', [
+        $this->add(31, 'tbd2', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(31, 'tbd3', [
+        $this->add(32, 'tbd3', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(32, 'tbd4', [
+        $this->add(33, 'tbd4', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(33, 'tbd5', [
+        $this->add(34, 'tbd5', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(34, 'tbd6', [
+        $this->add(35, 'tbd6', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(35, 'tbd7', [
+        $this->add(36, 'tbd7', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(36, 'tbd8', [
+        $this->add(37, 'tbd8', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(37, 'tbd9', [
+        $this->add(38, 'tbd9', [
             'from' => Types::typeAsset()
         ]);
-        $this->add(38, 'tbd10', [
+        $this->add(39, 'tbd10', [
             'from' => Types::typeAsset()
         ]);
     }
     
     private function add($id, $name, $params)
     {
-        $this->operations[] = Types::typeNamedOperation($id, $name, $params);
+        $this->operations[] = Types::typeNamedOperation($id, $name . self::SUFFIX, $params);
     }
 }

@@ -11,7 +11,9 @@ class Transaction {
     public function __construct($connection)
     {
         $properties = $connection->exec('database_api', 'get_dynamic_global_properties');
-        $block = $connection->exec('database_api', 'get_block', [$properties['last_irreversible_block_num']]);
+        $block = $connection->exec('database_api', 'get_block', [
+            'block_num' => $properties['last_irreversible_block_num']
+        ])['block'];
         $buf = new ByteBuffer();
         $buf->write(hex2bin($block['previous']));
         $this->tx = [
@@ -31,7 +33,10 @@ class Transaction {
 
     public function addOperation($name, $params)
     {
-        $this->tx['operations'][] = [$name, $params];
+        $this->tx['operations'][] = [
+            'type' => $name . Operations::SUFFIX,
+            'value' => $params
+        ];
     }
     
     public function sign($privateWIFs)
