@@ -735,7 +735,7 @@ class Amalgam extends Component {
     public function getAccount($name)
     {
         $result = $this->findAccounts([$name]);
-        return ($result != null) && !empty($result['accounts']) ? $result['accounts'][0] : null;
+        return ($result != null) && is_array($result) && !empty($result) ? $result[0] : null;
     }
     
     public function validateAccountName($value)

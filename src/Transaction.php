@@ -13,7 +13,7 @@ class Transaction {
         $properties = $connection->exec('database_api', 'get_dynamic_global_properties');
         $block = $connection->exec('database_api', 'get_block', [
             'block_num' => $properties['last_irreversible_block_num']
-        ])['block'];
+        ]);
         $buf = new ByteBuffer();
         $buf->write(hex2bin($block['previous']));
         $this->tx = [
