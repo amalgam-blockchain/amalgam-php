@@ -489,6 +489,55 @@ class Amalgam extends Component {
         ]);
     }
 
+    // Market History API
+
+    public function getTicker()
+    {
+        return $this->execute('market_history_api', 'get_ticker');
+    }
+
+    public function getVolume()
+    {
+        return $this->execute('market_history_api', 'get_volume');
+    }
+
+    public function getOrderBook($limit)
+    {
+        return $this->execute('market_history_api', 'get_order_book', [
+            'limit' => $limit,
+        ]);
+    }
+
+    public function getTradeHistory($start, $end, $limit)
+    {
+        return $this->execute('market_history_api', 'get_trade_history', [
+            'start' => $start,
+            'end' => $end,
+            'limit' => $limit,
+        ]);
+    }
+
+    public function getRecentTrades($limit)
+    {
+        return $this->execute('market_history_api', 'get_recent_trades', [
+            'limit' => $limit,
+        ]);
+    }
+
+    public function getMarketHistory($bucketSeconds, $start, $end)
+    {
+        return $this->execute('market_history_api', 'get_market_history', [
+            'bucket_seconds' => $bucketSeconds,
+            'start' => $start,
+            'end' => $end,
+        ]);
+    }
+
+    public function getMarketHistoryBuckets()
+    {
+        return $this->execute('market_history_api', 'get_market_history_buckets');
+    }
+
     // Operations
     
     public function transfer($wif, $from, $to, $amount, $memo)
