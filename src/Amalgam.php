@@ -147,6 +147,33 @@ class Amalgam extends Component {
         ]);
     }
     
+    public function getWitnessVotesByAccount($account)
+    {
+        return $this->execute('database_api', 'get_witness_votes_by_account', [
+            'account' => $account,
+        ]);
+    }
+    
+    public function getWitnessVotesByWitness($account)
+    {
+        return $this->execute('database_api', 'get_witness_votes_by_witness', [
+            'account' => $account,
+        ]);
+    }
+    
+    public function getWitnessesByVote($account, $limit)
+    {
+        return $this->execute('database_api', 'get_witnesses_by_vote', [
+            'account' => $account,
+            'limit' => $limit,
+        ]);
+    }
+    
+    public function getWitnessCount()
+    {
+        return $this->execute('database_api', 'get_witness_count');
+    }
+    
     public function getActiveWitnesses()
     {
         return $this->execute('database_api', 'get_active_witnesses');
@@ -166,6 +193,11 @@ class Amalgam extends Component {
         return $this->execute('database_api', 'find_accounts', [
             'accounts' => $accounts,
         ]);
+    }
+    
+    public function getAccountCount()
+    {
+        return $this->execute('database_api', 'get_account_count');
     }
     
     public function getAccountHistory($account, $start, $limit)
@@ -248,6 +280,14 @@ class Amalgam extends Component {
         ]);
     }
     
+    public function getEscrow($from, $escrowId)
+    {
+        return $this->execute('database_api', 'get_escrow', [
+            'from' => $from,
+            'escrow_id' => $escrowId,
+        ]);
+    }
+    
     public function listWithdrawVestingRoutes($start, $limit, $order)
     {
         return $this->execute('database_api', 'list_withdraw_vesting_routes', [
@@ -274,9 +314,16 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function findSavingsWithdrawals($account)
+    public function findSavingsWithdrawalsFrom($account)
     {
-        return $this->execute('database_api', 'find_savings_withdrawals', [
+        return $this->execute('database_api', 'find_savings_withdrawals_from', [
+            'account' => $account,
+        ]);
+    }
+    
+    public function findSavingsWithdrawalsTo($account)
+    {
+        return $this->execute('database_api', 'find_savings_withdrawals_to', [
             'account' => $account,
         ]);
     }
