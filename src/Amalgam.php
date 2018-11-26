@@ -899,9 +899,7 @@ class Amalgam extends Component {
             'key_auths' => [[$publicKeys['posting'], 1]],
         ];
         $properties = $this->getChainProperties();
-        $fee = Asset::fromString($properties['account_creation_fee']);
-        $fee->amount = $fee->amount * 30;
-        return $this->accountCreate($registrarWif, $fee->toString(), $registrarName,
+        return $this->accountCreate($registrarWif, $properties['account_creation_fee'], $registrarName,
                 $name, $owner, $active, $posting, $publicKeys['memo'], '');
     }
     
