@@ -19,7 +19,8 @@ class Operations
         $this->add(1, 'transfer_to_vesting', [
             'from' => Types::typeString(),
             'to' => Types::typeString(),
-            'amount' => Types::typeAsset()
+            'amount' => Types::typeAsset(),
+            'memo' => Types::typeString()
         ]);
         $this->add(2, 'withdraw_vesting', [
             'account' => Types::typeString(),

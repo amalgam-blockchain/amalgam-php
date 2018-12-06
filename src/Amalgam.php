@@ -550,12 +550,13 @@ class Amalgam extends Component {
         ]);
     }
     
-    public function transferToVesting($wif, $from, $to, $amount)
+    public function transferToVesting($wif, $from, $to, $amount, $memo)
     {
         return $this->broadcast($wif, 'transfer_to_vesting', [
             'from' => $from,
             'to' => $to,
             'amount' => $amount,
+            'memo' => $memo,
         ]);
     }
     
