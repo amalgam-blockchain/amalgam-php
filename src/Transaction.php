@@ -11,7 +11,7 @@ class Transaction {
     public function __construct($connection)
     {
         $properties = $connection->exec('database_api', 'get_dynamic_global_properties');
-        $block = $connection->exec('database_api', 'get_block', [
+        $block = $connection->exec('database_api', 'get_block_header', [
             'block_num' => $properties['last_irreversible_block_num']
         ]);
         $buf = new ByteBuffer();
